@@ -1,15 +1,21 @@
 public class Customer {
 
-    private String name;
+    private String fname;
+    private String lname;
     private String parcelID;
 
-    public Customer(String name, String parcelID) {
-        this.name = name;
+    public Customer(String fname, String lname, String parcelID) {
+        this.fname = fname;
+        this.lname = lname;
         this.parcelID = parcelID;
     }
 
-    public String getName() {
-        return name;
+    public String getfname() {
+        return fname;
+    }
+
+    public String getlname() {
+        return lname;
     }
 
     public String getParcelID() {

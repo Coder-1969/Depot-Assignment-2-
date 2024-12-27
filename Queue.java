@@ -1,56 +1,77 @@
 import java.io.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Queue {
 
-    private ArrayList<Customer> customerArrayList;
+    private LinkedList<Customer> customerLinkedList; // Replaced ArrayList with LinkedList
 
     public Queue() {
-        customerArrayList = new ArrayList<>();
+        customerLinkedList = new LinkedList<>();
     }
 
-    // adds user to our collection
-    public void addUser(Customer customer) {
-        customerArrayList.add(customer);
+    // Adds user to our collection
+    public void addCustomer(Customer customer) {
+        customerLinkedList.add(customer);
     }
 
-    // saves user to database file
+    // Saves users to the database file
     public void saveCustomer(File file) {
         try {
-            // user model
+            // User model
             Customer customer;
             String save_data = "";
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));
             int i = 0;
-            while( i < customerArrayList.size()) {
-                customer = customerArrayList.get(i);
-                save_data = customer.getfname() + ", " + customer.getlname();
+            while (i < customerLinkedList.size()) {
+                customer = customerLinkedList.get(i);
+                save_data = customer.getFullName();
+                bufferedWriter.write(save_data);
+                bufferedWriter.newLine();
                 i++;
             }
-            bufferedWriter.write(save_data);
-            bufferedWriter.newLine();
-            // prevents memory leak
+            // Prevents memory leak
             bufferedWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // reads user from database file
-    public Object[] loadCustomers(File file) {
-        Object[] objects;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            // each lines to array
-            objects = bufferedReader.lines().toArray();
-            bufferedReader.close();
-            return objects;
+    // Reads customers from the database file
+    public void loadCustomers() {
+        File file = new File("Custs.csv");
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                // Assuming CSV format: fullName, parcelID
+                String[] data = line.split(",");
+                if (data.length == 2) {
+                    String fullName = data[0].trim();
+                    String[] nameParts = fullName.split(" ", 2);
+                    String firstName = nameParts[0].trim();
+                    String lastName = nameParts.length > 1 ? nameParts[1].trim() : ""; // Handle cases with no last name
+                    String parcelID = data[1].trim();
+                    Customer customer = new Customer(firstName, lastName, parcelID);
+                    customerLinkedList.add(customer);
+                } else {
+                    System.out.println("Invalid line format: " + line);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
 
-}
+
+
+
+    public void displayCustomers() {
+        for (Customer customer : customerLinkedList) {
+            System.out.println(customer);
+        }
+    }
+
+
+
+ }

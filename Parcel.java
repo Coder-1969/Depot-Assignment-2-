@@ -1,11 +1,9 @@
 public class Parcel {
-
     private String parcelID;
     private String dimensions;
     private double weight;
     private int daysInDepot;
     private String status;
-
 
     public Parcel(String parcelID, String dimensions, double weight, int daysInDepot, String status) {
         this.parcelID = parcelID;
@@ -41,5 +39,10 @@ public class Parcel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return parcelID + "," + dimensions + "," + weight + "," + daysInDepot + "," + status;
     }
 }

@@ -1,24 +1,36 @@
 public class Parcel {
     private String parcelID;
-    private String dimensions;
+    private double length;
+    private double width;
+    private double height;
     private double weight;
     private int daysInDepot;
     private String status;
 
-    public Parcel(String parcelID, String dimensions, double weight, int daysInDepot, String status) {
+    public Parcel(String parcelID, double length, double width, double height, double weight, int daysInDepot, String status) {
         this.parcelID = parcelID;
-        this.dimensions = dimensions;
+        this.length = length;
+        this.width = width;
+        this.height = height;
         this.weight = weight;
         this.daysInDepot = daysInDepot;
-        this.status = status;
+        this.status = "In Depot";
     }
 
     public String getParcelID() {
         return parcelID;
     }
 
-    public String getDimensions() {
-        return dimensions;
+    public double getLength() {
+        return length;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 
     public double getWeight() {
@@ -43,6 +55,6 @@ public class Parcel {
 
     @Override
     public String toString() {
-        return parcelID + "," + dimensions + "," + weight + "," + daysInDepot + "," + status;
+        return parcelID + "," + length + "," + width + "," + height + "," + weight + "," + daysInDepot + "," + status;
     }
 }

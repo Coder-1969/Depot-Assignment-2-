@@ -16,17 +16,18 @@ public class ParcelMap {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                // Assuming CSV format: parcelID, dimension1, dimension2, dimension3, weight, daysInDepot
+                // Assuming CSV format: parcelID,length,width,height,weight,daysInDepot
                 String[] data = line.split(",");
-                if (data.length == 6) {  // Now expecting 6 fields
+                if (data.length == 6) {  // Expecting 6 fields
                     String parcelID = data[0].trim();
-                    String dimensions = data[1].trim() + "x" + data[2].trim() + "x" + data[3].trim(); // Combine dimensions
-                    double weight = Double.parseDouble(data[4].trim()); // Weight
-                    int daysInDepot = Integer.parseInt(data[5].trim()); // Days in depot
-                    String status = "Unknown"; // Assuming "status" is not provided in this case
+                    double length = Double.parseDouble(data[1].trim());
+                    double width = Double.parseDouble(data[2].trim());
+                    double height = Double.parseDouble(data[3].trim());
+                    double weight = Double.parseDouble(data[4].trim());
+                    int daysInDepot = Integer.parseInt(data[5].trim());
 
                     // Create a Parcel object with the read data
-                    Parcel parcel = new Parcel(parcelID, dimensions, weight, daysInDepot, status);
+                    Parcel parcel = new Parcel(parcelID, length, width, height, weight, daysInDepot, "In Depot");
                     parcelTreeMap.put(parcelID, parcel);
                 } else {
                     System.out.println("Invalid line format: " + line);  // Debugging output
@@ -43,11 +44,7 @@ public class ParcelMap {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             for (Map.Entry<String, Parcel> entry : parcelTreeMap.entrySet()) {
                 Parcel parcel = entry.getValue();
-                String saveData = parcel.getParcelID() + "," +
-                        parcel.getDimensions() + "," +
-                        parcel.getWeight() + "," +
-                        parcel.getDaysInDepot() + "," +
-                        parcel.getStatus();
+                String saveData = parcel.toString(); // Use the overridden toString method
                 bufferedWriter.write(saveData);
                 bufferedWriter.newLine();
             }
@@ -60,7 +57,7 @@ public class ParcelMap {
     public void readParcels() {
         for (Map.Entry<String, Parcel> entry : parcelTreeMap.entrySet()) {
             Parcel parcel = entry.getValue();
-            System.out.println(parcel);
+            System.out.println(parcel); // Use the overridden toString method for formatted output
         }
     }
 
@@ -73,5 +70,10 @@ public class ParcelMap {
         } else {
             System.out.println("Parcel not found with ID: " + parcelID);
         }
+    }
+
+    // Additional method to retrieve a specific parcel
+    public Parcel getParcel(String parcelID) {
+        return parcelTreeMap.get(parcelID);
     }
 }

@@ -9,12 +9,22 @@ public class Queue {
         customerLinkedList = new LinkedList<>();
     }
 
-    // Adds user to our collection
+    // Adds a customer to the collection
     public void addCustomer(Customer customer) {
         customerLinkedList.add(customer);
     }
 
-    // Saves users to the database file
+    // Removes the first customer from the queue
+    public Customer removeCustomer() {
+        if (!customerLinkedList.isEmpty()) {
+            return customerLinkedList.removeFirst();
+        } else {
+            System.out.println("The queue is empty. No customer to remove.");
+            return null;
+        }
+    }
+
+    // Saves customers to the database file
     public void saveCustomer(File file) {
         try {
             // User model
@@ -62,16 +72,10 @@ public class Queue {
         }
     }
 
-
-
-
-
+    // Displays all customers in the queue
     public void displayCustomers() {
         for (Customer customer : customerLinkedList) {
             System.out.println(customer);
         }
     }
-
-
-
- }
+}

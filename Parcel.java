@@ -55,6 +55,7 @@ public class Parcel {
 
     @Override
     public String toString() {
-        return parcelID + "," + length + "," + width + "," + height + "," + weight + "," + daysInDepot + "," + status;
+        return parcelID + "," + length + "," + width + "," + height + "," + weight + "kg," + daysInDepot + "," + status;
     }
+
 }

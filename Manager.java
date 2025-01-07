@@ -30,7 +30,8 @@ public class Manager {
         displayData();
         processCustomer();
         saveData();
-        writeLog();
+        findParcel();
+        generateReport();
     }
 
     // Load customer and parcel data
@@ -59,16 +60,28 @@ public class Manager {
     }
 
     // Process customer (collect parcel)
+
     // Process customer (collect parcel)
     public void processCustomer() {
-        Customer customer = customerQueue.removeCustomer(); // Correctly remove the first customer from the queue
+        Customer customer = customerQueue.removeCustomer(); // Remove the first customer from the queue
         if (customer != null) {
             Parcel parcel = parcelMap.getParcel(customer.getParcelID());
             if (parcel != null) {
                 DepotStaff staff = new DepotStaff("John Doe", 123);
+
+                // Calculate the fee using DepotStaff
+                double fee = staff.calculateFee(parcel);
+
+                // Process the customer and parcel
                 staff.processCustomer(customer.getFullName(), parcel, "collect");
+
+                // Update the parcel status
                 parcelMap.updateParcel(parcel.getParcelID(), parcel.getDaysInDepot() - 1, "collected");
-                view.appendOutput("Processed customer: " + customer.getFullName() + " for parcel ID: " + parcel.getParcelID());
+
+                // Display the processed information along with the fee
+                view.appendOutput("Processed customer: " + customer.getFullName() +
+                        " for parcel ID: " + parcel.getParcelID() +
+                        "\nCalculated Fee: £" + String.format("%.2f", fee));
             } else {
                 view.appendOutput("No parcel found for customer: " + customer.getFullName());
             }
@@ -78,10 +91,16 @@ public class Manager {
     }
 
 
+
     // Add a new customer
+    // Add a new customer and ensure both queue and LinkedList are updated
     public void addCustomer(Customer customer) {
-        customerQueue.addCustomer(customer);
-        view.appendOutput("Customer added: " + customer);
+        if (customer != null) {
+            customerQueue.addCustomer(customer);  // Add customer to the Queue
+            view.appendOutput("Customer added to queue: " + customer.getFullName());
+        } else {
+            view.appendOutput("Invalid customer. Please try again.");
+        }
     }
 
     // Remove a customer from the queue after parcel collection
@@ -123,12 +142,41 @@ public class Manager {
         return false; // No matching customer found
     }
 
-    // Write log to file
-    public void writeLog() {
-        log.addEvent("Parcel collection and customer processing completed.");
-        log.writeLogToFile("LogFile.txt");
-        view.appendOutput("Log has been written to LogFile.txt.");
+    public void findParcel() {
+        String parcelId = null;
+        parcelMap.getParcel(parcelId);
     }
+
+
+    // Write log to file
+    public void generateReport() {
+        // Log the report generation event
+        log.addEvent("Generating report...");
+
+        // Add customer details to the log
+        List<Customer> customers = customerQueue.getCustomers();
+        StringBuilder customerReport = new StringBuilder("Customer Report:\n");
+        for (Customer customer : customers) {
+            customerReport.append(customer).append("\n");
+        }
+        log.addEvent(customerReport.toString());
+
+        // Add parcel details to the log
+        Collection<Parcel> parcels = parcelMap.getAllParcels();
+        StringBuilder parcelReport = new StringBuilder("Parcel Report:\n");
+        for (Parcel parcel : parcels) {
+            parcelReport.append(parcel).append("\n");
+        }
+        log.addEvent(parcelReport.toString());
+
+        // Write the complete log to the file
+        log.writeLogToFile("generateReport.txt");
+
+        // Update the UI with the status
+        view.updateStatus("Report generated and saved to generateReport.txt.");
+        view.appendOutput("Report generated and saved to generateReport.txt.");
+    }
+
 
     public void updateStatus(String s) {
         view.updateStatus(s);
